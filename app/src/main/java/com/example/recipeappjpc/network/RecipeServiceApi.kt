@@ -1,4 +1,4 @@
-package com.example.recipeappjpc.presentation
+package com.example.recipeappjpc.network
 
 import com.example.recipeappjpc.model.Recipe
 import com.example.recipeappjpc.model.RecipeResult

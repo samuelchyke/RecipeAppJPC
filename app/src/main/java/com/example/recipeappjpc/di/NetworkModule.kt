@@ -1,7 +1,7 @@
 package com.example.recipeappjpc.di
 
-import com.example.recipeappjpc.presentation.RecipeServiceApi
-import com.example.recipeappjpc.presentation.RecipeServiceApi.Companion.BASE_URL
+import com.example.recipeappjpc.network.RecipeServiceApi
+import com.example.recipeappjpc.network.RecipeServiceApi.Companion.BASE_URL
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
