@@ -1,7 +1,5 @@
 package com.example.recipeappjpc.presentation
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeappjpc.model.Recipe
@@ -9,103 +7,176 @@ import com.example.recipeappjpc.repository.NetworkRepository
 import com.example.recipeappjpc.utils.FoodCategory
 import com.example.recipeappjpc.utils.getFoodCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val PAGE_SIZE = 30
+
+data class RecipeScreenUiState(
+
+    val recipe: List<Recipe> = listOf(),
+    val selectedCategory: FoodCategory? = null,
+    val scrollTabPosition: Int = 0,
+    val loading: Boolean = false,
+    val query: String = "",
+    val page: Int = 1,
+    var recipeListScrollPosition: Int = 0,
+
+    )
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     private val networkRepository: NetworkRepository
 ) : ViewModel() {
 
-    val recipe: MutableState<List<Recipe>> = mutableStateOf(listOf())
-
-    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
-
-    val scrollTabPosition = mutableStateOf(0)
-
-    val loading = mutableStateOf(false)
-
-    val query = mutableStateOf("")
-
-    val page = mutableStateOf(1)
-
-    private var recipeListScrollPosition = 0
+    private val _uiState = MutableStateFlow(RecipeScreenUiState())
+    val uiState = _uiState.asStateFlow()
 
     init {
         searchRecipes()
     }
 
     fun searchRecipes() = viewModelScope.launch {
-        loading.value = true
-        clearRecipeList()
-        val response = networkRepository.getListOfRecipes(query.value,page.value)
-        response.body()?.let {
-            recipe.value = it.results
+        _uiState.update {
+            it.copy(
+                loading = true
+            )
         }
-        loading.value = false
+        clearRecipeList()
+        val response = networkRepository.getListOfRecipes(_uiState.value.query, _uiState.value.page)
+        response.body()?.let { recipe ->
+            _uiState.update {
+                it.copy(
+                    recipe = recipe.results
+                )
+            }
+        }
+        _uiState.update {
+            it.copy(
+                loading = false
+            )
+        }
     }
 
-    fun nextPage(){
+    fun nextPage() {
         viewModelScope.launch {
             // prevent duplicate event due to recompose happening to quickly
-            if((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE) ){
-                loading.value = true
+            if ((_uiState.value.recipeListScrollPosition + 1) >= (_uiState.value.page * PAGE_SIZE)) {
+                _uiState.update {
+                    it.copy(
+                        loading = true
+                    )
+                }
                 incrementPage()
 
-                if(page.value > 1){
-                    val response = networkRepository.getListOfRecipes(query.value,page.value)
+                if (_uiState.value.page > 1) {
+                    val response = networkRepository.getListOfRecipes(_uiState.value.query, _uiState.value.page)
                     response.body()?.let {
                         appendRecipes(it.results)
                     }
                 }
-                loading.value = false
+                _uiState.update {
+                    it.copy(
+                        loading = false
+                    )
+                }
             }
         }
     }
 
-    private fun appendRecipes(recipes: List<Recipe>){
-        val currentList = ArrayList(this.recipe.value)
-        currentList.addAll(recipes)
-        this.recipe.value = currentList
+    //
+    private fun appendRecipes(recipes: List<Recipe>) {
+        val currentList = ArrayList(_uiState.value.recipe)
+        currentList += recipes
+        _uiState.update {
+            it.copy(
+                recipe = currentList
+            )
+        }
     }
 
-    private fun incrementPage(){
-        page.value ++
+    private fun incrementPage() {
+        _uiState.update {
+            it.copy(
+                page = +1
+            )
+        }
     }
 
-    fun onChangedRecipeResultPosition(position: Int){
-        recipeListScrollPosition = position
+    fun onChangedRecipeResultPosition(position: Int) {
+        _uiState.update {
+            it.copy(
+                recipeListScrollPosition = position
+            )
+        }
     }
+
 
     fun onQueryChanged(query: String) {
-        this.query.value = query
+        _uiState.update {
+            it.copy(
+                query = query
+            )
+        }
     }
 
     fun onSelectedCategoryChanged(category: String) {
-        this.page.value = 1
+        _uiState.update {
+            it.copy(
+                page = 1
+            )
+        }
         val newCategory = getFoodCategory(category)
-        this.selectedCategory.value = newCategory
-        this.scrollTabPosition.value = newCategory?.ordinal ?: 0
+        _uiState.update {
+            it.copy(
+                selectedCategory = newCategory
+            )
+        }
+        _uiState.update {
+            it.copy(
+                scrollTabPosition = newCategory?.ordinal ?: 0
+            )
+        }
         onQueryChanged(category)
     }
 
+
     fun clearSelectedCategory() {
-        if (query.value != selectedCategory.value?.value){
-            this.selectedCategory.value = null
-            this.scrollTabPosition.value = 0
-            this.page.value = 1
+        val queryNotEqualToSelectedCategory =
+            _uiState.value.query != _uiState.value.selectedCategory?.value
+        if (queryNotEqualToSelectedCategory) {
+            _uiState.update {
+                it.copy(
+                    page = 1
+                )
+            }
+            _uiState.update {
+                it.copy(
+                    selectedCategory = null
+                )
+            }
+            _uiState.update {
+                it.copy(
+                    scrollTabPosition = 0
+                )
+            }
             onChangedRecipeResultPosition(0)
         }
-        val newCategory = getFoodCategory(query.value)
-        if (newCategory != null){
-            onSelectedCategoryChanged(query.value)
+        val newCategory = getFoodCategory(_uiState.value.query)
+        if (newCategory != null) {
+            onSelectedCategoryChanged(_uiState.value.query)
         }
     }
 
-    private fun clearRecipeList(){
-        recipe.value = listOf()
+    private fun clearRecipeList() {
+        _uiState.update {
+            it.copy(
+                recipe = listOf()
+            )
+        }
     }
 
 }
