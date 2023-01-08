@@ -36,63 +36,63 @@ fun SearchAppBar(
         color = MaterialTheme.colors.primary,
         elevation = 8.dp,
     ) {
-            Column {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = query,
-                        onValueChange = {
-                            onQueryChanged(it)
-                        },
-                        label = {
-                            Text(text = "Search")
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = "Search Image"
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done,
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                onExecuteSearch()
-                                clearFocus()
-                                onClearSelectedCategory()
-                            }
-                        ),
+        Column {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = query,
+                    onValueChange = {
+                        onQueryChanged(it)
+                    },
+                    label = {
+                        Text(text = "Search")
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search Image"
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            onExecuteSearch()
+                            clearFocus()
+                            onClearSelectedCategory()
+                        }
+                    ),
+                )
+            }
+
+            ScrollableTabRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, bottom = 2.dp),
+                selectedTabIndex = selectedChip,
+                edgePadding = 2.dp,
+                indicator = {
+                    TabRowDefaults.Indicator(
+                        color = Color.White,
+                        height = 0.dp,
+                        modifier = Modifier.tabIndicatorOffset(it[0])
                     )
                 }
+            ) {
+                for (category in getAllFoodCategories()) {
+                    FoodCategoryChip(
+                        category = category.value,
+                        isSelected = selectedCategory == category,
+                        onExecuteSearch = { onExecuteSearch() },
+                        onSearchCategoryChanged = {
+                            onSelectedCategoryChanged(it)
+                        }
 
-                ScrollableTabRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 2.dp, bottom = 2.dp),
-                    selectedTabIndex = selectedChip,
-                    edgePadding = 2.dp,
-                    indicator = {
-                        TabRowDefaults.Indicator(
-                            color = Color.White,
-                            height = 0.dp,
-                            modifier = Modifier.tabIndicatorOffset(it[0])
-                        )
-                    }
-                ) {
-                    for (category in getAllFoodCategories()) {
-                        FoodCategoryChip(
-                            category = category.value,
-                            isSelected = selectedCategory == category,
-                            onExecuteSearch = { onExecuteSearch() },
-                            onSearchCategoryChanged = {
-                                onSelectedCategoryChanged(it)
-                            }
-
-                        )
-                    }
+                    )
                 }
             }
+        }
     }
 }

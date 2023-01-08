@@ -6,12 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_DETAIL_SCREEN_ROUTE
 import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_ROUTE
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.DESCRIPTION_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.INGREDIENTS_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.INSTRUCTIONS_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.PUBLISHER_ARG
 //import com.example.reappearance.presentation.navigation.DestinationsArgs.RATING_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.TITLE_ARG
 
 
 /**
@@ -69,10 +64,10 @@ class NavigationActions(private val navController: NavHostController) {
         navController.navigate(RECIPE_ROUTE)
     }
 
-    fun navigateToRecipeDetailScreen(vararg recipeArg: String, recipeRating: Int = 0) {
+    fun navigateToRecipeDetailScreen(vararg recipeArguments: String, recipeRating: Int = 0) {
         val route = buildString {
             append(RECIPE_DETAIL_SCREEN_ROUTE)
-            recipeArg.forEach { args ->
+            recipeArguments.forEach { args ->
                 append("/$args")
 //                append(recipeRating)
             }

@@ -7,10 +7,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import com.example.recipeappjpc.model.Recipe
-import com.example.recipeappjpc.presentation.PAGE_SIZE
-import com.example.recipeappjpc.presentation.navigation.Screens
+import com.example.recipeappjpc.presentation.navigation.NavigationActions
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -21,7 +19,7 @@ fun RecipeList(
     onChangeScrollPosition: (Int) -> Unit,
     page: Int,
     onTriggerNextPage: () -> Unit,
-    navController: NavController,
+    navAction: NavigationActions,
 ) {
     Box(
         modifier = Modifier.background(color = MaterialTheme.colors.surface)
@@ -31,28 +29,17 @@ fun RecipeList(
                 items = recipes
             ) { index, recipe ->
                 onChangeScrollPosition(index)
+                val encodedImageUrl = URLEncoder.encode(
+                    recipe.featured_image, StandardCharsets.UTF_8.toString()
+                )
                 if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
                     onTriggerNextPage()
                 }
                 RecipeCard(recipe = recipe, onClick = {
-                    val encodedImageUrl = URLEncoder.encode(
-                        recipe.featured_image, StandardCharsets.UTF_8.toString()
-                    )
-                    navController.navigate(
-                        "${Screens.RecipeDetailScreen.route}/${recipe.title}/${encodedImageUrl}"
-//                            Screens.RecipeDetailScreen.withArgs(
-//                                recipe.title,
-//                                recipe.publisher,
-//                                recipe.description,
-//                                recipe.ingredients.toString(),
-//                                recipe.cooking_instructions.toString(),
-//                                    recipe.rating
-//                            )
-                    )
+                    navAction.navigateToRecipeDetailScreen(recipe.title, encodedImageUrl)
                 })
             }
         }
-//        }
         CircularIndeterminateProgressBar(isDisplayed = loading)
     }
 }

@@ -26,40 +26,13 @@ fun NavGraph(
     ) {
         composable(route = Destinations.RECIPE_ROUTE) {
             RecipeScreen(
-                navController = navController
+                navAction = navActions
             )
         }
-
 
         composable(
             route = RECIPE_DETAIL_SCREEN_ROUTE + TITLE_ARG + IMAGE_ARG,
             arguments = Screens.RecipeDetailScreen.arguments
-
-//            listOf(
-//                navArgument(TITLE_ARG) {
-//                    type = NavType.StringType
-//                    defaultValue = ""
-//                },
-//                navArgument (PUBLISHER_ARG){
-//                    type = NavType.StringType
-//                    defaultValue = ""
-//                },
-//                navArgument (DESCRIPTION_ARG){
-//                    type = NavType.StringType
-//                    defaultValue = ""
-//                },
-//                navArgument (INGREDIENTS_ARG){
-//                    type = NavType.StringArrayType
-//                    defaultValue = ""
-//                },
-//                navArgument (INSTRUCTIONS_ARG){
-//                    type = NavType.StringType
-//                    defaultValue = ""
-//                },
-//                navArgument (RATING_ARG){
-//                    type = NavType.IntType
-//                    defaultValue = 0
-//                }
             ) { entry ->
             RecipeDetailScreen(
                 onBack = { navController.popBackStack()},

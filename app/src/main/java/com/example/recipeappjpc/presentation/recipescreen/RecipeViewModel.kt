@@ -1,4 +1,4 @@
-package com.example.recipeappjpc.presentation
+package com.example.recipeappjpc.presentation.recipescreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 const val PAGE_SIZE = 30
@@ -38,12 +39,8 @@ class RecipeViewModel @Inject constructor(
     }
 
     fun searchRecipes() = viewModelScope.launch {
-        _uiState.update {
-            it.copy(
-                loading = true
-            )
-        }
         clearRecipeList()
+        startLoading()
         try {
             val response =
                 networkRepository.getListOfRecipes(_uiState.value.query, _uiState.value.page)
@@ -55,42 +52,45 @@ class RecipeViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-
+            Timber.e("launchJob: Exception: ${e}, ${e.cause}")
+            e.printStackTrace()
         }
-        _uiState.update {
-            it.copy(
-                loading = false
-            )
-        }
+        stopLoading()
     }
 
     fun nextPage() {
         viewModelScope.launch {
             // prevent duplicate event due to recompose happening to quickly
             if ((_uiState.value.recipeListScrollPosition + 1) >= (_uiState.value.page * PAGE_SIZE)) {
-                _uiState.update {
-                    it.copy(
-                        loading = true
-                    )
-                }
+                startLoading()
                 incrementPage()
-
                 if (_uiState.value.page > 1) {
-                    val response = networkRepository.getListOfRecipes(_uiState.value.query, _uiState.value.page)
+                    val response = networkRepository.getListOfRecipes(
+                        _uiState.value.query, _uiState.value.page
+                    )
                     response.body()?.let {
                         appendRecipes(it.results)
                     }
                 }
-                _uiState.update {
-                    it.copy(
-                        loading = false
-                    )
-                }
+                stopLoading()
             }
         }
     }
 
-    //
+    private fun stopLoading() =
+        _uiState.update {
+            it.copy(
+                loading = false
+            )
+        }
+
+    private fun startLoading() =
+        _uiState.update {
+            it.copy(
+                loading = true
+            )
+        }
+
     private fun appendRecipes(recipes: List<Recipe>) {
         val currentList = ArrayList(_uiState.value.recipe)
         currentList += recipes
@@ -101,30 +101,26 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    private fun incrementPage() {
+    private fun incrementPage() =
         _uiState.update {
             it.copy(
                 page = +1
             )
         }
-    }
 
-    fun onChangedRecipeResultPosition(position: Int) {
+    fun onChangedRecipeResultPosition(position: Int) =
         _uiState.update {
             it.copy(
                 recipeListScrollPosition = position
             )
         }
-    }
 
-
-    fun onQueryChanged(query: String) {
+    fun onQueryChanged(query: String) =
         _uiState.update {
             it.copy(
                 query = query
             )
         }
-    }
 
     fun onSelectedCategoryChanged(category: String) {
         _uiState.update {
@@ -145,7 +141,6 @@ class RecipeViewModel @Inject constructor(
         }
         onQueryChanged(category)
     }
-
 
     fun clearSelectedCategory() {
         val queryNotEqualToSelectedCategory =
@@ -174,13 +169,13 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    private fun clearRecipeList() {
+    private fun clearRecipeList() =
         _uiState.update {
             it.copy(
                 recipe = listOf()
             )
         }
-    }
+
 
 }
 
