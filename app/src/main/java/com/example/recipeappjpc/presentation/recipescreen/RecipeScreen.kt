@@ -17,7 +17,6 @@ import com.example.recipeappjpc.presentation.RecipeViewModel
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun RecipeScreen(
-//    onLogin: () -> Unit,
     recipeViewModel: RecipeViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavController
@@ -62,13 +61,14 @@ private fun RecipeScreenContent(
 ) {
     val screenPadding = Modifier.padding(
         horizontal = 5.dp,
-        vertical = 2.dp,
+        vertical = 1.dp,
     )
     val commonModifier = modifier
         .fillMaxWidth()
         .then(screenPadding)
     Surface(
-        modifier = commonModifier, color = MaterialTheme.colors.background
+        modifier = commonModifier,
+        color = MaterialTheme.colors.background
     ) {
         Box(
             modifier = Modifier

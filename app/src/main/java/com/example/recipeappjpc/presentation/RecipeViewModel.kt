@@ -16,7 +16,6 @@ import javax.inject.Inject
 const val PAGE_SIZE = 30
 
 data class RecipeScreenUiState(
-
     val recipe: List<Recipe> = listOf(),
     val selectedCategory: FoodCategory? = null,
     val scrollTabPosition: Int = 0,
@@ -24,8 +23,7 @@ data class RecipeScreenUiState(
     val query: String = "",
     val page: Int = 1,
     var recipeListScrollPosition: Int = 0,
-
-    )
+)
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
@@ -46,13 +44,18 @@ class RecipeViewModel @Inject constructor(
             )
         }
         clearRecipeList()
-        val response = networkRepository.getListOfRecipes(_uiState.value.query, _uiState.value.page)
-        response.body()?.let { recipe ->
-            _uiState.update {
-                it.copy(
-                    recipe = recipe.results
-                )
+        try {
+            val response =
+                networkRepository.getListOfRecipes(_uiState.value.query, _uiState.value.page)
+            response.body()?.let { recipe ->
+                _uiState.update {
+                    it.copy(
+                        recipe = recipe.results
+                    )
+                }
             }
+        } catch (e: Exception) {
+
         }
         _uiState.update {
             it.copy(
