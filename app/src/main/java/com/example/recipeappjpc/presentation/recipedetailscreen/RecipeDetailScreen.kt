@@ -1,5 +1,7 @@
 package com.example.recipeappjpc.presentation.recipedetailscreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,14 +13,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
+import com.example.recipeappjpc.model.Recipe
+import com.example.recipeappjpc.model.Test
 import com.google.accompanist.appcompattheme.AppCompatTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun RecipeDetailScreen(
     onBack: () -> Unit,
-    entry : NavBackStackEntry,
+    entry: NavBackStackEntry,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     Scaffold(
@@ -30,10 +35,19 @@ fun RecipeDetailScreen(
         }
     ) { paddingValues ->
 
+        val recipe = entry.arguments?.getParcelable<Recipe>("recipe")
+        val test = entry.arguments?.getParcelable<Test>("test")
+
         RecipeDetailScreenContent(
             modifier = Modifier.padding(paddingValues),
-            recipeImage = entry.arguments?.getString("image")!!,
-            recipeTitle = entry.arguments?.getString("title")!!,
+            recipeImage = entry.arguments?.getString("image")?: "",
+            recipeTitle = test?.a ?: "",
+            recipeRating = entry.arguments?.getString("rating")?: "",
+            recipePublisher = entry.arguments?.getString("publisher")?: "",
+            recipeDateUpdated = entry.arguments?.getString("dateUpdated")?: "",
+//            recipeDescription = entry.arguments?.getString("description")!!,
+            recipeIngredients = entry.arguments?.getStringArrayList("ingredients") ?: emptyList(),
+            recipeInstructions = entry.arguments?.getString("instructions")?: ""
         )
     }
 }
@@ -41,12 +55,16 @@ fun RecipeDetailScreen(
 @Composable
 fun RecipeDetailScreenContent(
     modifier: Modifier = Modifier,
-    recipeImage : String,
-    recipeTitle : String
-
+    recipeImage: String,
+    recipeTitle: String,
+    recipeRating: String,
+    recipePublisher: String,
+    recipeDateUpdated: String,
+//    recipeDescription: String,
+    recipeIngredients: List<String>,
+    recipeInstructions: String,
 ) {
     val scrollState = rememberScrollState()
-
     val screenPadding = Modifier.padding(
         horizontal = 0.dp,
         vertical = 0.dp,
@@ -79,94 +97,79 @@ fun RecipeDetailScreenContent(
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-//                recipe.title.let { title ->
-                    Row(
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp)
+                ) {
+                    Text(
+                        text = recipeTitle,
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
+                            .wrapContentWidth(Alignment.Start),
+                        style = MaterialTheme.typography.h5
+                    )
+                    Text(
+                        text = recipeRating,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 4.dp)
-                    ) {
-                        Text(
-                            text = recipeTitle,
-                            modifier = Modifier
-                                .fillMaxWidth(0.85f)
-                                .wrapContentWidth(Alignment.Start),
-                            style = MaterialTheme.typography.h5
-                        )
-//                        val rank = recipe.rating.toString()
-//                        Text(
-//                            text = rank,
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .wrapContentWidth(Alignment.End)
-//                                .align(Alignment.CenterVertically),
-//                            style = MaterialTheme.typography.h5
-//                        )
-                    }
-//                }
-//                recipe.publisher.let { publisher ->
-//                    val updated = recipe.date_updated
+                            .wrapContentWidth(Alignment.End)
+                            .align(Alignment.CenterVertically),
+                        style = MaterialTheme.typography.h5
+                    )
+                }
+                Text(
+                    text = "Updated $recipeDateUpdated by $recipePublisher",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.caption
+                )
+//                if (recipeDescription != "N/A") {
 //                    Text(
-//                        text = "Updated $updated by $publisher",
+//                        text = recipeDescription,
 //                        modifier = Modifier
 //                            .fillMaxWidth()
 //                            .padding(bottom = 8.dp),
-//                        style = MaterialTheme.typography.caption
-//                    )
-//                }
-//                recipe.description.let { description ->
-//                    if (description != "N/A") {
-//                        Text(
-//                            text = description,
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(bottom = 8.dp),
-//                            style = MaterialTheme.typography.body1
-//                        )
-//                    }
-//                }
-//
-//                Text(
-//                    text = "Ingredients",
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(bottom = 4.dp)
-//                        .wrapContentWidth(Alignment.CenterHorizontally),
-//                    style = MaterialTheme.typography.body1
-//                )
-//
-//                for (ingredient in recipe.ingredients!!) {
-//                    Text(
-//                        text = ingredient,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(bottom = 4.dp),
 //                        style = MaterialTheme.typography.body1
 //                    )
 //                }
-//
-//                recipe.cooking_instructions?.let { instructions ->
-//
-//                    Text(
-//                        text = "Cooking Instructions",
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(bottom = 4.dp)
-//                            .wrapContentWidth(Alignment.CenterHorizontally),
-//                        style = MaterialTheme.typography.body1
-//                    )
-//
-//                    Text(
-//                        text = instructions,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(bottom = 4.dp),
-//                        style = MaterialTheme.typography.body1
-//                    )
+                Text(
+                    text = "Ingredients",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp)
+                        .wrapContentWidth(Alignment.CenterHorizontally),
+                    style = MaterialTheme.typography.body1
+                )
+                for (ingredient in recipeIngredients) {
+                    Text(
+                        text = ingredient,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 4.dp),
+                        style = MaterialTheme.typography.body1
+                    )
                 }
+                Text(
+                    text = "Cooking Instructions",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp)
+                        .wrapContentWidth(Alignment.CenterHorizontally),
+                    style = MaterialTheme.typography.body1
+                )
+                Text(
+                    text = recipeInstructions,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp),
+                    style = MaterialTheme.typography.body1
+                )
             }
         }
     }
-
+}
 
 @Preview
 @Composable

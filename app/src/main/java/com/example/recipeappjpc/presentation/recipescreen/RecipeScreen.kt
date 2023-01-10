@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.recipeappjpc.model.Recipe
 import com.example.recipeappjpc.presentation.navigation.NavigationActions
 
@@ -18,8 +19,8 @@ import com.example.recipeappjpc.presentation.navigation.NavigationActions
 fun RecipeScreen(
     recipeViewModel: RecipeViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-//    navController: NavController
-    navAction: NavigationActions
+    navAction: NavigationActions,
+    navController: NavController
 ) {
 
     val uiState by recipeViewModel.uiState.collectAsStateWithLifecycle()
@@ -44,9 +45,8 @@ fun RecipeScreen(
             onChangeScrollPosition =  recipeViewModel::onChangedRecipeResultPosition,
             page = uiState.page,
             onTriggerNextPage = {recipeViewModel.nextPage()},
-//            navController = navController,
-            navAction = navAction
-
+            navAction = navAction,
+            navController = navController
         )
     }
 }
@@ -60,6 +60,7 @@ private fun RecipeScreenContent(
     page: Int,
     onTriggerNextPage: () -> Unit,
     navAction: NavigationActions,
+    navController: NavController,
 ) {
     val screenPadding = Modifier.padding(
         horizontal = 5.dp,
@@ -83,7 +84,8 @@ private fun RecipeScreenContent(
                 onChangeScrollPosition = { onChangeScrollPosition(it) },
                 page = page,
                 onTriggerNextPage = { onTriggerNextPage() },
-                navAction = navAction
+                navAction = navAction,
+                navController = navController,
             )
         }
     }
