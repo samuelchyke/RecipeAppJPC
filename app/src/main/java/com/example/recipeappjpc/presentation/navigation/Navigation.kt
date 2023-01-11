@@ -5,8 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.navArgument
 import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_DETAIL_SCREEN_ROUTE
 import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_ROUTE
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.TEST_ARG
-import com.example.recipeappjpc.utils.AssetParamType
+import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.RECIPE_ARG
+import com.example.recipeappjpc.utils.RecipeNavType
 
 /**
  * Screens used in [Destinations]
@@ -18,8 +18,8 @@ sealed class Screens(val route: String, val arguments: List<NamedNavArgument>) {
     object RecipeDetailScreen : Screens(
         "RecipeDetailScreen",
         arguments = listOf(
-                navArgument("test") {
-                type = AssetParamType()
+                navArgument("recipe") {
+                type = RecipeNavType()
             }
         )
     )
@@ -32,7 +32,6 @@ sealed class Screens(val route: String, val arguments: List<NamedNavArgument>) {
 
 object DestinationsArgs {
     const val RECIPE_ARG = "/{recipe}"
-    const val TEST_ARG = "/{test}"
 }
 
 /**
@@ -43,7 +42,7 @@ object Destinations {
     val RECIPE_DETAIL_SCREEN_ROUTE = Screens.RecipeDetailScreen.route
     val RECIPE_DETAIL_SCREEN_ROUTE_ARGUMENTS = buildString {
         append(RECIPE_DETAIL_SCREEN_ROUTE)
-        append(TEST_ARG)
+        append(RECIPE_ARG)
     }
     val RECIPE_DETAIL_SCREEN_ARGUMENTS = Screens.RecipeDetailScreen.arguments
 }

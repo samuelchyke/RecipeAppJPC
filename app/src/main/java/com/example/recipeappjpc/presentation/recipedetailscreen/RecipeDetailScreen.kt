@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import com.example.recipeappjpc.model.Recipe
-import com.example.recipeappjpc.model.Test
 import com.google.accompanist.appcompattheme.AppCompatTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
@@ -35,19 +34,18 @@ fun RecipeDetailScreen(
         }
     ) { paddingValues ->
 
-        val recipe = entry.arguments?.getParcelable<Recipe>("recipe")
-        val test = entry.arguments?.getParcelable<Test>("test")
+        val recipe = entry.arguments?.getParcelable("recipe", Recipe::class.java)!!
 
         RecipeDetailScreenContent(
             modifier = Modifier.padding(paddingValues),
-            recipeImage = entry.arguments?.getString("image")?: "",
-            recipeTitle = test?.a ?: "",
-            recipeRating = entry.arguments?.getString("rating")?: "",
-            recipePublisher = entry.arguments?.getString("publisher")?: "",
-            recipeDateUpdated = entry.arguments?.getString("dateUpdated")?: "",
-//            recipeDescription = entry.arguments?.getString("description")!!,
-            recipeIngredients = entry.arguments?.getStringArrayList("ingredients") ?: emptyList(),
-            recipeInstructions = entry.arguments?.getString("instructions")?: ""
+            recipeImage = recipe.featured_image ?: "",
+            recipeTitle = recipe.title,
+            recipeRating = recipe.rating.toString(),
+            recipePublisher = recipe.publisher,
+            recipeDateUpdated = recipe.date_updated,
+            recipeDescription = recipe.description,
+            recipeIngredients = recipe.ingredients ?: emptyList(),
+            recipeInstructions = recipe.cooking_instructions ?: "N/A"
         )
     }
 }
@@ -60,7 +58,7 @@ fun RecipeDetailScreenContent(
     recipeRating: String,
     recipePublisher: String,
     recipeDateUpdated: String,
-//    recipeDescription: String,
+    recipeDescription: String,
     recipeIngredients: List<String>,
     recipeInstructions: String,
 ) {
@@ -125,15 +123,15 @@ fun RecipeDetailScreenContent(
                         .padding(bottom = 8.dp),
                     style = MaterialTheme.typography.caption
                 )
-//                if (recipeDescription != "N/A") {
-//                    Text(
-//                        text = recipeDescription,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(bottom = 8.dp),
-//                        style = MaterialTheme.typography.body1
-//                    )
-//                }
+                if (recipeDescription != "N/A") {
+                    Text(
+                        text = recipeDescription,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        style = MaterialTheme.typography.body1
+                    )
+                }
                 Text(
                     text = "Ingredients",
                     modifier = Modifier
@@ -144,7 +142,7 @@ fun RecipeDetailScreenContent(
                 )
                 for (ingredient in recipeIngredients) {
                     Text(
-                        text = ingredient,
+                        text = "- $ingredient",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 4.dp),

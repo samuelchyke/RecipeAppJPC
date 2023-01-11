@@ -20,6 +20,3 @@ data class Recipe(
     val title: String
 ): Parcelable
 
-//fun Recipe.listToString() : String{
-//    return this.ingredients.toString()
-//}

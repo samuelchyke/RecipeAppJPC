@@ -8,21 +8,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.ActivityNavigator
 import androidx.navigation.NavController
-import androidx.navigation.compose.ComposeNavigator
-import com.example.recipeappjpc.model.DomainRecipe
 import com.example.recipeappjpc.model.Recipe
-import com.example.recipeappjpc.model.Test
-import com.example.recipeappjpc.model.mapToDomain
-import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_DETAIL_SCREEN_ROUTE
-import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_DETAIL_SCREEN_ROUTE_ARGUMENTS
-import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_ROUTE
 import com.example.recipeappjpc.presentation.navigation.NavigationActions
-import com.example.recipeappjpc.ui.theme.Teal200
 import com.google.gson.Gson
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Composable
 fun RecipeList(
@@ -47,14 +36,9 @@ fun RecipeList(
                     onTriggerNextPage()
                 }
 
-                val test = Test("queifbqwuhfbqohf", emptyList())
-                val json = Uri.encode(Gson().toJson(test))
-
                 RecipeCard(recipe = recipe, onClick = {
-
                     val recipeJson = Uri.encode(Gson().toJson(recipe))
-
-                    navController.navigate("$RECIPE_DETAIL_SCREEN_ROUTE/$json")
+                    navAction.navigateToRecipeDetailScreen(recipeJson)
                 })
             }
         }
