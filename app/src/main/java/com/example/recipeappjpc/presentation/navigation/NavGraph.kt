@@ -29,15 +29,14 @@ fun NavGraph(
     ) {
         composable(route = RECIPE_ROUTE) {
             RecipeScreen(
-                navAction = navActions,
-                navController = navController
+                navAction = navActions
             )
         }
 
         composable(
             route = RECIPE_DETAIL_SCREEN_ROUTE_ARGUMENTS,
             arguments = RECIPE_DETAIL_SCREEN_ARGUMENTS
-            ) { entry ->
+        ) { entry ->
             RecipeDetailScreen(
                 onBack = { navController.popBackStack() },
                 entry = entry
@@ -45,6 +44,3 @@ fun NavGraph(
         }
     }
 }
-
-
-

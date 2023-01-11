@@ -174,14 +174,6 @@ fun RecipeDetailScreenContent(
 fun MainScreenPreview() {
     AppCompatTheme {
         Surface {
-
         }
     }
 }
-
-
-
-
-
-
-

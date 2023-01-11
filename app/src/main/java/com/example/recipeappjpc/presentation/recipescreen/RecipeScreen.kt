@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.recipeappjpc.model.Recipe
 import com.example.recipeappjpc.presentation.navigation.NavigationActions
 
@@ -20,17 +19,17 @@ fun RecipeScreen(
     recipeViewModel: RecipeViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navAction: NavigationActions,
-    navController: NavController
 ) {
 
     val uiState by recipeViewModel.uiState.collectAsStateWithLifecycle()
+    val _uiState by recipeViewModel.__uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
 
     Scaffold(scaffoldState = scaffoldState, topBar = {
         SearchAppBar(
-            query = uiState.query,
-            selectedCategory = uiState.selectedCategory,
-            selectedChip = uiState.scrollTabPosition,
+            query = _uiState.query,
+            selectedCategory = _uiState.selectedCategory,
+            selectedChip = _uiState.scrollTabPosition,
             onQueryChanged = recipeViewModel::onQueryChanged,
             onExecuteSearch = recipeViewModel::searchRecipes,
             clearFocus = focusManager::clearFocus,
@@ -40,13 +39,12 @@ fun RecipeScreen(
     }) { paddingValues ->
         RecipeScreenContent(
             modifier = Modifier.padding(paddingValues),
-            loading = uiState.loading,
-            recipes = uiState.recipe,
-            onChangeScrollPosition =  recipeViewModel::onChangedRecipeResultPosition,
-            page = uiState.page,
-            onTriggerNextPage = {recipeViewModel.nextPage()},
-            navAction = navAction,
-            navController = navController
+            loading = _uiState.loading,
+            recipes = _uiState.recipe,
+            onChangeScrollPosition = recipeViewModel::onChangedRecipeResultPosition,
+            page = _uiState.page,
+            onTriggerNextPage = { recipeViewModel.nextPage() },
+            navAction = navAction
         )
     }
 }
@@ -59,8 +57,7 @@ private fun RecipeScreenContent(
     onChangeScrollPosition: (Int) -> Unit,
     page: Int,
     onTriggerNextPage: () -> Unit,
-    navAction: NavigationActions,
-    navController: NavController,
+    navAction: NavigationActions
 ) {
     val screenPadding = Modifier.padding(
         horizontal = 5.dp,
@@ -84,8 +81,7 @@ private fun RecipeScreenContent(
                 onChangeScrollPosition = { onChangeScrollPosition(it) },
                 page = page,
                 onTriggerNextPage = { onTriggerNextPage() },
-                navAction = navAction,
-                navController = navController,
+                navAction = navAction
             )
         }
     }

@@ -2,7 +2,7 @@ package com.example.recipeappjpc.utils
 
 import com.example.recipeappjpc.utils.FoodCategory.*
 
-enum class FoodCategory(val value: String){
+enum class FoodCategory(val value: String) {
     CHICKEN("Chicken"),
     BEEF("Beef"),
     SOUP("Soup"),
@@ -14,8 +14,12 @@ enum class FoodCategory(val value: String){
     DONUT("Donut"),
 }
 
-fun getAllFoodCategories(): List<FoodCategory>{
-    return listOf(CHICKEN, BEEF, SOUP, DESSERT, VEGETARIAN,MILK, VEGAN, PIZZA, DONUT
+fun getAllFoodCategories(): List<FoodCategory> {
+    return listOf(
+        CHICKEN,
+        BEEF, SOUP,
+        DESSERT, VEGETARIAN, MILK,
+        VEGAN, PIZZA, DONUT
     )
 }
 

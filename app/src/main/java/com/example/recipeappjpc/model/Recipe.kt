@@ -18,5 +18,4 @@ data class Recipe(
     val rating: Int,
     val source_url: String,
     val title: String
-): Parcelable
-
+) : Parcelable

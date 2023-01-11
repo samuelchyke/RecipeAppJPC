@@ -14,6 +14,7 @@ abstract class RepositoryModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun provideNetworkRepository(networkRepositoryImpl: NetworkRepositoryImpl): NetworkRepository
-
+    abstract fun provideNetworkRepository(
+        networkRepositoryImpl: NetworkRepositoryImpl
+    ): NetworkRepository
 }

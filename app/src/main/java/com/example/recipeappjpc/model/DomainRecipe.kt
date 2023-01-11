@@ -26,4 +26,3 @@ fun mapToDomain(recipe: Recipe): DomainRecipe =
         rating = recipe.rating,
         title = recipe.title,
     )
-

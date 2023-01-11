@@ -18,12 +18,11 @@ sealed class Screens(val route: String, val arguments: List<NamedNavArgument>) {
     object RecipeDetailScreen : Screens(
         "RecipeDetailScreen",
         arguments = listOf(
-                navArgument("recipe") {
+            navArgument("recipe") {
                 type = RecipeNavType()
             }
         )
     )
-
 }
 
 /**
@@ -61,9 +60,8 @@ class NavigationActions(private val navController: NavHostController) {
     ) {
         val route = buildString {
             append(RECIPE_DETAIL_SCREEN_ROUTE)
-            append("/${recipeArgument}")
+            append("/$recipeArgument")
         }
         navController.navigate(route)
     }
-
 }

@@ -14,37 +14,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-    fun FoodCategoryChip(
-        category: String,
-        isSelected: Boolean,
-        onExecuteSearch: () -> Unit,
-        onSearchCategoryChanged: (String) -> Unit,
+fun FoodCategoryChip(
+    category: String,
+    isSelected: Boolean,
+    onExecuteSearch: () -> Unit,
+    onSearchCategoryChanged: (String) -> Unit,
+) {
+    Surface(
+        modifier = Modifier.padding(end = 8.dp),
+        elevation = 8.dp,
+        shape = MaterialTheme.shapes.medium,
+        color = if (isSelected) Color.White else MaterialTheme.colors.primary
     ) {
-        Surface(
-            modifier = Modifier.padding(end = 8.dp),
-            elevation = 8.dp,
-            shape = MaterialTheme.shapes.medium,
-            color = if (isSelected) Color.White else MaterialTheme.colors.primary
+        Row(
+            modifier = Modifier.toggleable(
+                value = isSelected,
+                onValueChange = {
+                    onSearchCategoryChanged(category)
+                    onExecuteSearch()
+                }
+            ),
+            verticalAlignment = CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = Modifier.toggleable(
-                    value = isSelected,
-                    onValueChange = {
-                        onSearchCategoryChanged(category)
-                        onExecuteSearch()
-                    }
-                ),
-                verticalAlignment = CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = category,
-                    style = MaterialTheme.typography.body2,
-                    color = if (isSelected) Color.Black else Color.White,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(CenterVertically)
-                )
-            }
+            Text(
+                text = category,
+                style = MaterialTheme.typography.body2,
+                color = if (isSelected) Color.Black else Color.White,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(CenterVertically)
+            )
         }
     }
+}
