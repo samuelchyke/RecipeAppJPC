@@ -42,55 +42,19 @@ fun RecipeList(
                 items = recipes
             ) { index, recipe ->
                 onChangeScrollPosition(index)
-                val encodedImageUrl = URLEncoder.encode(
-                    recipe.featured_image, StandardCharsets.UTF_8.toString()
-                )
 
-                val ingredients = recipe.ingredients?.toTypedArray() ?: emptyArray()
-//                recipe.ingredients?.forEach { it
-//                    ingredients = arrayOf(it)
-//                }
                 if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
                     onTriggerNextPage()
                 }
 
-                val domainRecipe = mapToDomain(recipe)
-
-                val mockDomainRecipe = DomainRecipe(
-                    "",
-                    "",
-                    "",
-                    "",
-                    listOf(""),
-                    "",
-                    0,
-                    ""
-                )
-
                 val test = Test("queifbqwuhfbqohf", emptyList())
                 val json = Uri.encode(Gson().toJson(test))
 
-//                val moshi = Moshi.Builder().build()
-//                val jsonAdapter = moshi.adapter(Test::class.java).lenient()
-//                val userJson = jsonAdapter.toJson(test)
-
                 RecipeCard(recipe = recipe, onClick = {
 
+                    val recipeJson = Uri.encode(Gson().toJson(recipe))
 
-//                    navController.currentBackStackEntry?.arguments?.putParcelable("recipe", json)
                     navController.navigate("$RECIPE_DETAIL_SCREEN_ROUTE/$json")
-//                    navAction.navigateToRecipeDetailScreen(
-//                        recipeIngredients = ingredients
-////                        recipe
-////                        recipe.title,
-////                        encodedImageUrl,
-////                        recipe.rating.toString(),
-////                        recipe.publisher,
-////                        recipe.date_added,
-//////                        recipe.description,
-////                        recipe.cooking_instructions ?: "Unavailable",
-////                        recipeIngredients = ingredients
-//                    )
                 })
             }
         }

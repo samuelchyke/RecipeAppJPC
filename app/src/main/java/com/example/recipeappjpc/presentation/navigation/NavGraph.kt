@@ -9,18 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_DETAIL_SCREEN_ARGUMENTS
-import com.example.recipeappjpc.presentation.recipedetailscreen.RecipeDetailScreen
-import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_DETAIL_SCREEN_ROUTE
 import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_DETAIL_SCREEN_ROUTE_ARGUMENTS
 import com.example.recipeappjpc.presentation.navigation.Destinations.RECIPE_ROUTE
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.DATE_UPDATED_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.DESCRIPTION_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.IMAGE_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.INGREDIENTS_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.INSTRUCTIONS_ARG
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.RATING_ARG
+import com.example.recipeappjpc.presentation.recipedetailscreen.RecipeDetailScreen
 import com.example.recipeappjpc.presentation.recipescreen.RecipeScreen
-import com.example.recipeappjpc.presentation.navigation.DestinationsArgs.TITLE_ARG
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -47,7 +39,7 @@ fun NavGraph(
             arguments = RECIPE_DETAIL_SCREEN_ARGUMENTS
             ) { entry ->
             RecipeDetailScreen(
-                onBack = { navController.popBackStack()},
+                onBack = { navController.popBackStack() },
                 entry = entry
             )
         }

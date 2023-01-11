@@ -176,6 +176,5 @@ class RecipeViewModel @Inject constructor(
             )
         }
 
-
 }
 
